@@ -88,25 +88,38 @@ Les agents fonctionnent avec **deux moteurs au choix** :
 Par défaut : Claude si une clé est présente, **sinon Ollama automatiquement**.
 Forçable avec `AGENTS_PROVIDER=ollama` ou `AGENTS_PROVIDER=anthropic`.
 
-**Utiliser Ollama (gratuit) :**
+**Démarrage automatique (recommandé) :**
+
+Après avoir installé Ollama (https://ollama.com), une seule commande suffit :
 
 ```bash
-# 1. Installez Ollama : https://ollama.com
-# 2. Téléchargez un modèle qui gère les outils du Directeur général :
-ollama pull llama3.1
-# 3. Démarrez le serveur Ollama :
-ollama serve
-# 4. Dans un autre terminal, démarrez l'application (sans clé API) :
-npm start
+npm run go
 ```
 
-Ouvrez `http://localhost:3000/agents.html` : une bannière indique le moteur
-actif et s'il est prêt. L'estimateur de plans (vision) reste, lui, sur Claude et
-nécessite une clé.
+Ce script détecte la RAM de votre machine, choisit un modèle adapté, le
+télécharge si besoin, démarre Ollama puis l'application. Ouvrez ensuite
+`http://localhost:3000/agents.html` — une bannière indique le moteur actif.
 
-> ℹ️ Ollama demande un ordinateur assez puissant (idéalement 16 Go de RAM). Pour
-> une machine plus modeste, essayez un modèle plus léger, p. ex.
-> `OLLAMA_MODEL=llama3.2`, puis `ollama pull llama3.2`.
+**Démarrage manuel (équivalent) :**
+
+```bash
+ollama pull llama3.1   # modèle qui gère les outils du Directeur général
+ollama serve           # démarre le serveur Ollama
+npm start              # dans un autre terminal, démarre l'application
+```
+
+**Quel modèle selon votre ordinateur ?** Le script `npm run go` choisit
+automatiquement, mais vous pouvez forcer via `OLLAMA_MODEL` :
+
+| RAM de la machine | Modèle conseillé | Qualité | Outils du DG |
+| ----------------- | ---------------- | ------- | ------------ |
+| 16 Go et plus     | `llama3.1` (8B)  | ★★★★    | ✅ fiable    |
+| 8 à 16 Go         | `llama3.2` (3B)  | ★★★     | ✅ correct   |
+| Moins de 8 Go     | `llama3.2:1b`    | ★★      | ⚠️ limité    |
+
+> ℹ️ L'estimateur de plans (vision) reste, lui, sur Claude et nécessite une clé.
+> Pour changer de modèle : `ollama pull <modèle>` puis mettez
+> `OLLAMA_MODEL=<modèle>` dans votre `.env`.
 
 ## Prérequis
 
@@ -124,14 +137,20 @@ cp .env.example .env   # configurez le moteur (Ollama gratuit, ou clé Claude)
 
 ## Lancement
 
-Avec Ollama (gratuit, agents seulement) :
+Le plus simple (choisit et prépare le moteur automatiquement) :
+
+```bash
+npm run go
+```
+
+Ou manuellement — avec Ollama (gratuit, agents seulement) :
 
 ```bash
 ollama serve            # dans un terminal
 npm start               # dans un autre terminal
 ```
 
-Avec Claude (agents + estimateur de plans) :
+Ou avec Claude (agents + estimateur de plans) :
 
 ```bash
 export ANTHROPIC_API_KEY=sk-ant-...   # ou via un fichier .env chargé par votre shell
@@ -149,8 +168,10 @@ src/estimator.js          Appels au modèle Claude (analyse vision + contrôle d
 src/pricing.js            Bordereau de prix unitaires et calcul de l'estimation
 src/agents/definitions.js Définition des 12 agents (rôles, sources, prompts, organigramme)
 src/agents/runtime.js     Exécution d'un agent + orchestration multi-agents du DG
+src/agents/llm.js         Couche moteur d'IA : Ollama (gratuit) ou Claude
 public/index.html         Interface de l'estimateur de plans
 public/agents.html        Interface des agents IA (chat + organigramme)
+scripts/start.mjs         Démarrage tout-en-un (npm run go)
 ```
 
 ## Configuration
