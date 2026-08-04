@@ -43,14 +43,39 @@ npm start
 Ouvrez ensuite http://localhost:3000, téléversez vos plans (PNG, JPEG, WEBP ou
 PDF) et lancez l'estimation.
 
+## Fonctionnalités complémentaires
+
+- **Prix unitaires éditables** — chaque prix du tableau d'estimation est
+  modifiable ; les totaux (aléas, honoraires, TVA) se recalculent
+  automatiquement.
+- **Export CSV** — téléchargement du bordereau et de la synthèse au format CSV
+  (compatible Excel, séparateur `;`, encodage UTF-8).
+- **Impression / PDF** — mise en page dédiée à l'impression, exportable en PDF
+  via la boîte de dialogue d'impression du navigateur.
+- **Historique des projets** — enregistrement des estimations réalisées pour les
+  retrouver, les recharger et les comparer. Les projets sont stockés côté serveur
+  dans `data/historique.json`.
+
 ## Structure du projet
 
 ```
-server.js          Serveur Express + endpoint /api/estimation
+server.js          Serveur Express + endpoints API
 src/estimator.js   Appels au modèle Claude (analyse vision + contrôle des oublis)
 src/pricing.js     Bordereau de prix unitaires et calcul de l'estimation
+src/historique.js  Stockage des projets enregistrés (fichier JSON)
 public/            Interface web (HTML/CSS/JS)
 ```
+
+## API
+
+| Méthode & route            | Rôle                                             |
+| -------------------------- | ------------------------------------------------ |
+| `POST /api/estimation`     | Analyse des plans → estimation → contrôle oublis |
+| `GET  /api/bordereau`      | Catalogue de prix unitaires et paramètres        |
+| `GET  /api/historique`     | Liste des projets enregistrés                    |
+| `POST /api/historique`     | Enregistre une estimation                        |
+| `GET  /api/historique/:id` | Récupère un projet complet                       |
+| `DELETE /api/historique/:id` | Supprime un projet                             |
 
 ## Configuration
 

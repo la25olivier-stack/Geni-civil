@@ -336,3 +336,151 @@ footer {
   font-size: 0.82rem;
   padding: 1.5rem 1rem 2.5rem;
 }
+
+/* --- Barre d'actions & boutons secondaires --- */
+
+.titre-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.titre-actions h2 {
+  margin: 0;
+}
+
+.actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.bouton-secondaire {
+  background: #fff;
+  color: var(--bleu, #1b4965);
+  border: 1px solid var(--bleu-clair);
+  padding: 0.45rem 0.8rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.bouton-secondaire:hover:not(:disabled) {
+  background: #eef6fb;
+}
+
+.bouton-secondaire:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* --- Prix unitaire éditable --- */
+
+.pu-input {
+  width: 90px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  font-size: 0.88rem;
+  padding: 0.25rem 0.4rem;
+  border: 1px solid var(--bordure);
+  border-radius: 5px;
+  background: #fffdf5;
+}
+
+.pu-input:focus {
+  outline: none;
+  border-color: var(--accent);
+  background: #fff;
+}
+
+/* --- Historique --- */
+
+.liste-historique {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0 0;
+}
+
+.liste-historique li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.7rem 0.9rem;
+  background: var(--fond);
+  border-radius: 8px;
+  margin-bottom: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.historique-infos {
+  flex: 1;
+  min-width: 200px;
+}
+
+.historique-infos strong {
+  display: block;
+}
+
+.historique-meta {
+  font-size: 0.82rem;
+  color: var(--gris);
+}
+
+.historique-actions {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.historique-vide {
+  color: var(--gris);
+  font-style: italic;
+  background: transparent !important;
+}
+
+.lien-supprimer {
+  background: none;
+  border: none;
+  color: var(--rouge);
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+/* --- Impression / PDF --- */
+
+@media print {
+  .entete,
+  footer,
+  .no-print,
+  #chargement,
+  #carteErreur,
+  .actions,
+  main > .carte:first-of-type {
+    display: none !important;
+  }
+
+  body {
+    background: #fff;
+  }
+
+  main {
+    margin: 0;
+    max-width: 100%;
+  }
+
+  .carte {
+    box-shadow: none;
+    border: 1px solid var(--bordure);
+    break-inside: avoid;
+  }
+
+  .pu-input {
+    border: none;
+    background: transparent;
+    width: auto;
+  }
+}

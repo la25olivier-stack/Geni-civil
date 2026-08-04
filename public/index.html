@@ -56,8 +56,25 @@
           <p id="observations" class="observations"></p>
         </section>
 
-        <section class="carte">
-          <h2>3. Première estimation</h2>
+        <section class="carte" id="carteEstimation">
+          <div class="titre-actions">
+            <h2>3. Première estimation</h2>
+            <div class="actions" id="actionsEstimation">
+              <button id="boutonEnregistrer" class="bouton-secondaire" type="button">
+                💾 Enregistrer
+              </button>
+              <button id="boutonCsv" class="bouton-secondaire" type="button">
+                ⬇ CSV
+              </button>
+              <button id="boutonImprimer" class="bouton-secondaire" type="button">
+                🖨 Imprimer / PDF
+              </button>
+            </div>
+          </div>
+          <p class="aide">
+            Les prix unitaires sont modifiables : ajustez-les au contexte du
+            projet, les totaux se recalculent automatiquement.
+          </p>
           <div class="table-wrap">
             <table id="tableauEstimation">
               <thead>
@@ -86,6 +103,18 @@
           <ul class="liste-oublis" id="listeOublis"></ul>
         </section>
       </div>
+
+      <section class="carte no-print" id="carteHistorique">
+        <div class="titre-actions">
+          <h2>Projets enregistrés</h2>
+          <button id="boutonRafraichir" class="bouton-secondaire" type="button">
+            ↻ Rafraîchir
+          </button>
+        </div>
+        <ul class="liste-historique" id="listeHistorique">
+          <li class="historique-vide">Aucun projet enregistré pour l'instant.</li>
+        </ul>
+      </section>
     </main>
 
     <footer>

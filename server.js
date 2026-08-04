@@ -3,7 +3,8 @@ import multer from "multer";
 import path from "path";
 import { fileURLToPath } from "url";
 import { analyserPlans, verifierOublis } from "./src/estimator.js";
-import { chiffrer } from "./src/pricing.js";
+import { chiffrer, CATALOGUE, PARAMETRES } from "./src/pricing.js";
+import { enregistrer, lister, recuperer, supprimer } from "./src/historique.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -23,10 +24,63 @@ const upload = multer({
   limits: { fileSize: 25 * 1024 * 1024, files: 10 },
 });
 
+app.use(express.json({ limit: "5mb" }));
 app.use(express.static(path.join(__dirname, "public")));
 
 app.get("/api/sante", (_req, res) => {
   res.json({ statut: "ok", cleConfiguree: Boolean(process.env.ANTHROPIC_API_KEY) });
+});
+
+// Bordereau de prix unitaires (pour l'édition des prix côté client).
+app.get("/api/bordereau", (_req, res) => {
+  res.json({ catalogue: CATALOGUE, parametres: PARAMETRES });
+});
+
+// --- Historique des projets ------------------------------------------------
+
+app.get("/api/historique", async (_req, res) => {
+  try {
+    res.json(await lister());
+  } catch (err) {
+    console.error("Erreur historique (liste):", err);
+    res.status(500).json({ erreur: "Impossible de lire l'historique." });
+  }
+});
+
+app.get("/api/historique/:id", async (req, res) => {
+  try {
+    const projet = await recuperer(req.params.id);
+    if (!projet) return res.status(404).json({ erreur: "Projet introuvable." });
+    res.json(projet);
+  } catch (err) {
+    console.error("Erreur historique (lecture):", err);
+    res.status(500).json({ erreur: "Impossible de lire le projet." });
+  }
+});
+
+app.post("/api/historique", async (req, res) => {
+  try {
+    const { nom, extraction, estimation, controle } = req.body || {};
+    if (!estimation) {
+      return res.status(400).json({ erreur: "Estimation manquante." });
+    }
+    const entree = await enregistrer({ nom, extraction, estimation, controle });
+    res.status(201).json(entree);
+  } catch (err) {
+    console.error("Erreur historique (enregistrement):", err);
+    res.status(500).json({ erreur: "Impossible d'enregistrer le projet." });
+  }
+});
+
+app.delete("/api/historique/:id", async (req, res) => {
+  try {
+    const ok = await supprimer(req.params.id);
+    if (!ok) return res.status(404).json({ erreur: "Projet introuvable." });
+    res.status(204).end();
+  } catch (err) {
+    console.error("Erreur historique (suppression):", err);
+    res.status(500).json({ erreur: "Impossible de supprimer le projet." });
+  }
 });
 
 /**
