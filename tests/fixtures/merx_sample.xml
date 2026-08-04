@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>MERX — Opportunités ouvertes</title>
+    <link>https://www.merx.com</link>
+    <description>Flux des appels d'offres publics</description>
+    <item>
+      <title>Construction d'un ponceau et travaux de terrassement</title>
+      <link>https://www.merx.com/opportunity/990011</link>
+      <guid>merx-990011</guid>
+      <pubDate>Sat, 02 Aug 2026 12:00:00 +0000</pubDate>
+      <description>Le ministère sollicite des soumissions pour la construction
+        d'un ponceau, l'excavation et le terrassement. Clôture: 2026-08-30.</description>
+    </item>
+    <item>
+      <title>Licences de logiciel de gestion documentaire</title>
+      <link>https://www.merx.com/opportunity/990012</link>
+      <guid>merx-990012</guid>
+      <pubDate>Sun, 03 Aug 2026 09:00:00 +0000</pubDate>
+      <description>Acquisition de licences d'un logiciel infonuagique de
+        gestion documentaire pour 200 utilisateurs.</description>
+    </item>
+  </channel>
+</rss>

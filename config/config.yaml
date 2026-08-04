@@ -1,0 +1,116 @@
+# Configuration de l'agent de veille des appels d'offres.
+# Les identifiants sensibles sont lus depuis des variables d'environnement
+# via la syntaxe ${VAR} — ne jamais committer de secrets ici.
+
+# Ne considérer que les avis publiés dans les N derniers jours (0 = désactivé).
+lookback_days: 7
+
+# Fichiers d'état / de sortie.
+state_file: data/seen.json
+output_dir: data/digests
+
+# --- Pertinence (orientée génie civil / infrastructures) ------------------
+relevance:
+  # Score minimal pour retenir un avis.
+  min_score: 2
+
+  # Mots-clés « forts » (+2) : très discriminants pour le génie civil.
+  strong_keywords:
+    - génie civil
+    - infrastructures
+    - voirie
+    - aqueduc
+    - égout
+    - pluvial
+    - pavage
+    - réfection de chaussée
+    - ouvrage d'art
+    - structure de béton
+    - conduite d'eau
+    - réseau d'égout
+    - surveillance de chantier
+
+  # Mots-clés standards (+1).
+  keywords:
+    - route
+    - chaussée
+    - trottoir
+    - asphalte
+    - bordure
+    - terrassement
+    - excavation
+    - drainage
+    - ponceau
+    - pont
+    - béton
+    - fondation
+    - remblai
+    - glissière
+    - signalisation
+    - éclairage routier
+    - ingénierie
+    - génie-conseil
+    - plans et devis
+    - construction
+    - réhabilitation
+    - réfection
+    - stationnement
+    - barrage
+    - digue
+    - station de pompage
+
+  # Catégories ciblées (+1 si la catégorie de l'avis correspond).
+  categories:
+    - travaux de construction
+    - services professionnels
+
+  # Exclut immédiatement l'avis s'il contient l'un de ces termes.
+  exclude_keywords:
+    - fourniture de mobilier
+    - service de traiteur
+    - denrées alimentaires
+    - logiciel
+    - assurance collective
+
+# --- Sources -------------------------------------------------------------
+# type: "seao_opendata"  -> fichier XML des données ouvertes SEAO
+# type: "rss"            -> flux RSS/Atom (MERX, Constructo, portails, etc.)
+sources:
+  - name: SEAO
+    type: seao_opendata
+    enabled: true
+    # Fichier XML des avis (données ouvertes Données Québec, jeu « seao »).
+    # Remplacer par l'URL du fichier courant, ou par un chemin local file://.
+    url: ${SEAO_XML_URL:-https://www.donneesquebec.ca/recherche/dataset/seao}
+    options:
+      # Surcharge éventuelle du nom des balises si le schéma diffère :
+      # fields:
+      #   title: [titre]
+      #   closing_at: [datefermeture]
+
+  - name: MERX
+    type: rss
+    enabled: true
+    # Flux RSS des opportunités MERX (à ajuster selon votre recherche/abonnement).
+    url: ${MERX_RSS_URL:-}
+    options:
+      category: appel d'offres public
+
+  # Exemple de plateforme additionnelle (désactivée par défaut).
+  - name: Constructo
+    type: rss
+    enabled: false
+    url: ${CONSTRUCTO_RSS_URL:-}
+    options:
+      category: construction
+
+# --- Livraison courriel (Gmail via SMTP) ---------------------------------
+email:
+  enabled: true
+  recipient: la25olivier@gmail.com
+  from_address: ${GMAIL_ADDRESS:-}
+  username: ${GMAIL_ADDRESS:-}
+  password: ${GMAIL_APP_PASSWORD:-}   # mot de passe d'application Gmail
+  smtp_host: smtp.gmail.com
+  smtp_port: 587
+  subject_prefix: "[Veille appels d'offres]"

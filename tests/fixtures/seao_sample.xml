@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Avis-Publics>
+  <Avis>
+    <numeroseao>1450001</numeroseao>
+    <numero>AO-2026-042</numero>
+    <titre>Réfection de la chaussée et des trottoirs — rue Principale</titre>
+    <organisme>Ville de Saint-Hyacinthe</organisme>
+    <nature>Travaux de construction</nature>
+    <region>Montérégie</region>
+    <datepublication>2026-08-01T09:00:00</datepublication>
+    <datefermeture>2026-08-28T11:00:00</datefermeture>
+    <montant>1 250 000 $</montant>
+    <description>Travaux de pavage, bordures de béton, drainage pluvial et
+      réfection complète de la chaussée sur 800 mètres.</description>
+    <url>https://www.seao.ca/avis/1450001</url>
+  </Avis>
+  <Avis>
+    <numeroseao>1450002</numeroseao>
+    <numero>AO-2026-043</numero>
+    <titre>Fourniture de mobilier de bureau ergonomique</titre>
+    <organisme>Cégep de Sherbrooke</organisme>
+    <nature>Approvisionnement (biens)</nature>
+    <region>Estrie</region>
+    <datepublication>2026-08-02T10:30:00</datepublication>
+    <datefermeture>2026-08-20T14:00:00</datefermeture>
+    <description>Achat et livraison de mobilier de bureau, chaises et
+      classeurs pour les nouveaux locaux administratifs.</description>
+    <url>https://www.seao.ca/avis/1450002</url>
+  </Avis>
+  <Avis>
+    <numeroseao>1450003</numeroseao>
+    <numero>SP-2026-011</numero>
+    <titre>Services professionnels — surveillance de chantier, réseau d'aqueduc</titre>
+    <organisme>Municipalité de Bromont</organisme>
+    <nature>Services professionnels</nature>
+    <region>Montérégie</region>
+    <datepublication>2026-08-03T08:15:00</datepublication>
+    <datefermeture>2026-09-05T11:00:00</datefermeture>
+    <description>Mandat d'ingénierie pour la surveillance de chantier des
+      travaux de remplacement d'une conduite d'eau et du réseau d'égout.</description>
+    <url>https://www.seao.ca/avis/1450003</url>
+  </Avis>
+</Avis-Publics>

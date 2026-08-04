@@ -1,0 +1,52 @@
+name: Veille appels d'offres
+
+on:
+  schedule:
+    # Tous les jours ouvrables à 11h30 UTC (~7h30 heure de l'Est).
+    - cron: "30 11 * * 1-5"
+  workflow_dispatch: {}   # exécution manuelle depuis l'onglet Actions
+
+permissions:
+  contents: read
+
+jobs:
+  veille:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Installer les dépendances
+        run: pip install -r requirements.txt
+
+      # Persiste l'état de déduplication entre exécutions (runners éphémères).
+      # La clé change à chaque exécution pour forcer une sauvegarde ; les
+      # restore-keys récupèrent l'état le plus récent.
+      - name: Restaurer/mémoriser l'état de déduplication
+        uses: actions/cache@v4
+        with:
+          path: data/seen.json
+          key: veille-seen-${{ github.run_id }}
+          restore-keys: |
+            veille-seen-
+
+      - name: Exécuter l'agent de veille
+        env:
+          GMAIL_ADDRESS: ${{ secrets.GMAIL_ADDRESS }}
+          GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
+          SEAO_XML_URL: ${{ secrets.SEAO_XML_URL }}
+          MERX_RSS_URL: ${{ secrets.MERX_RSS_URL }}
+          CONSTRUCTO_RSS_URL: ${{ secrets.CONSTRUCTO_RSS_URL }}
+        run: python run.py -v
+
+      - name: Archiver le digest du jour
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: digest
+          path: data/digests/
+          if-no-files-found: ignore

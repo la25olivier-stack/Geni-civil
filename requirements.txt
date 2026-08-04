@@ -1,0 +1,6 @@
+# Dépendances d'exécution
+PyYAML>=6.0
+requests>=2.31
+
+# Dépendances de test (facultatives)
+# pytest>=8.0
