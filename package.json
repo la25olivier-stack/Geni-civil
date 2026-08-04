@@ -1,0 +1,25 @@
+{
+  "name": "estimateur-ia-geni-civil",
+  "version": "0.1.0",
+  "description": "Estimateur IA : analyse des plans, première estimation et vérification des oublis pour le génie civil.",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "keywords": [
+    "genie-civil",
+    "estimation",
+    "metre",
+    "ia",
+    "claude",
+    "plans"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.68.0",
+    "express": "^4.21.2",
+    "multer": "^2.0.1"
+  }
+}

@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Estimateur IA — Génie civil</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="entete">
+      <div class="entete-contenu">
+        <h1>Estimateur IA <span>Génie civil</span></h1>
+        <p>
+          Analyse vos plans, prépare une première estimation et vérifie les
+          oublis.
+        </p>
+      </div>
+    </header>
+
+    <main>
+      <section class="carte">
+        <h2>1. Téléverser les plans</h2>
+        <p class="aide">
+          Formats acceptés : PNG, JPEG, WEBP, PDF — jusqu'à 10 fichiers (25 Mo max
+          chacun).
+        </p>
+
+        <label class="zone-depot" id="zoneDepot">
+          <input type="file" id="champFichiers" accept="image/*,application/pdf" multiple hidden />
+          <span class="zone-depot-texte">
+            Glissez vos plans ici ou <strong>cliquez pour parcourir</strong>
+          </span>
+        </label>
+
+        <ul class="liste-fichiers" id="listeFichiers"></ul>
+
+        <button id="boutonAnalyser" class="bouton-principal" disabled>
+          Lancer l'estimation
+        </button>
+      </section>
+
+      <section class="carte" id="chargement" hidden>
+        <div class="loader"></div>
+        <p id="messageChargement">Analyse des plans en cours…</p>
+      </section>
+
+      <section class="carte erreur" id="carteErreur" hidden>
+        <h2>Erreur</h2>
+        <p id="messageErreur"></p>
+      </section>
+
+      <div id="resultats" hidden>
+        <section class="carte">
+          <h2>2. Projet analysé</h2>
+          <p id="descriptionProjet" class="description-projet"></p>
+          <p id="observations" class="observations"></p>
+        </section>
+
+        <section class="carte" id="carteEstimation">
+          <div class="titre-actions">
+            <h2>3. Première estimation</h2>
+            <div class="actions" id="actionsEstimation">
+              <button id="boutonEnregistrer" class="bouton-secondaire" type="button">
+                💾 Enregistrer
+              </button>
+              <button id="boutonCsv" class="bouton-secondaire" type="button">
+                ⬇ CSV
+              </button>
+              <button id="boutonImprimer" class="bouton-secondaire" type="button">
+                🖨 Imprimer / PDF
+              </button>
+            </div>
+          </div>
+          <p class="aide">
+            Les prix unitaires sont modifiables : ajustez-les au contexte du
+            projet, les totaux se recalculent automatiquement.
+          </p>
+          <div class="table-wrap">
+            <table id="tableauEstimation">
+              <thead>
+                <tr>
+                  <th>Poste</th>
+                  <th>Catégorie</th>
+                  <th class="num">Quantité</th>
+                  <th>Unité</th>
+                  <th class="num">P.U. (€)</th>
+                  <th class="num">Montant (€)</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+          <div class="recap" id="recap"></div>
+          <p class="avertissement">
+            Estimation indicative de première approche. Les prix unitaires du
+            bordereau doivent être ajustés au contexte réel du projet.
+          </p>
+        </section>
+
+        <section class="carte">
+          <h2>4. Vérification des oublis</h2>
+          <p id="syntheseControle" class="synthese-controle"></p>
+          <ul class="liste-oublis" id="listeOublis"></ul>
+        </section>
+      </div>
+
+      <section class="carte no-print" id="carteHistorique">
+        <div class="titre-actions">
+          <h2>Projets enregistrés</h2>
+          <button id="boutonRafraichir" class="bouton-secondaire" type="button">
+            ↻ Rafraîchir
+          </button>
+        </div>
+        <ul class="liste-historique" id="listeHistorique">
+          <li class="historique-vide">Aucun projet enregistré pour l'instant.</li>
+        </ul>
+      </section>
+    </main>
+
+    <footer>
+      <p>Estimateur IA — outil d'aide au chiffrage. Ne remplace pas un métré détaillé.</p>
+    </footer>
+
+    <script src="app.js"></script>
+  </body>
+</html>
