@@ -7,6 +7,9 @@ civil (images ou PDF), en extraire un métré de première approche, produire un
 estimation chiffrée à partir d'un bordereau de prix unitaires, et signaler les
 postes fréquemment oubliés.
 
+Elle embarque aussi un **Directeur général IA** : un agent qui coordonne la
+vision d'ensemble de l'entreprise (rapports, KPI, risques, décisions).
+
 ## Fonctionnement
 
 Le pipeline se déroule en trois étapes :
@@ -20,6 +23,34 @@ Le pipeline se déroule en trois étapes :
 3. **Vérification des oublis** — les ouvrages détectés sont comparés à une
    check-list métier ; Claude renvoie les postes manquants ou à vérifier, avec
    une gravité.
+
+## Directeur général IA ⭐
+
+Second module de l'application, accessible via `direction.html` (lien dans
+l'en-tête). C'est l'agent qui **coordonne tous les autres** et éclaire la
+direction. Il est capable de :
+
+- produire un **rapport quotidien et hebdomadaire** ;
+- **identifier les problèmes prioritaires** ;
+- **suivre les KPI** de l'entreprise (chiffre d'affaires, marges, carnet de
+  commandes, trésorerie…) ;
+- **proposer des décisions fondées sur les données** ;
+- **répondre aux questions de la direction** en langage naturel, par exemple :
+  - « Quels projets perdent de l'argent ? »
+  - « Quel client est le plus rentable cette année ? »
+  - « Quels sont les 10 plus gros risques cette semaine ? »
+
+Comme pour l'estimation, la logique repose sur une séparation nette entre
+**calculs déterministes** et **raisonnement de l'IA** : `src/data.js` agrège les
+données de l'entreprise (portefeuille de projets, coûts, facturation, risques) et
+calcule un tableau de bord fiable (KPI, projets déficitaires, rentabilité par
+client, classement des risques). Ce tableau de bord est ensuite transmis au
+modèle (`src/directeur.js`), qui synthétise, hiérarchise et propose des
+décisions — sans jamais inventer de chiffres.
+
+> Les données de `src/data.js` sont des **données de démonstration**. Pour un
+> usage réel, branchez ce module sur votre ERP / logiciel de gestion en
+> remplaçant le contenu de `PROJETS` (ou en alimentant les mêmes structures).
 
 ## Prérequis
 
@@ -46,11 +77,21 @@ PDF) et lancez l'estimation.
 ## Structure du projet
 
 ```
-server.js          Serveur Express + endpoint /api/estimation
+server.js          Serveur Express + endpoints /api/estimation et /api/direction/*
 src/estimator.js   Appels au modèle Claude (analyse vision + contrôle des oublis)
 src/pricing.js     Bordereau de prix unitaires et calcul de l'estimation
-public/            Interface web (HTML/CSS/JS)
+src/data.js        Données de l'entreprise + calcul du tableau de bord (KPI, risques)
+src/directeur.js   Directeur général IA (rapports et réponses aux questions)
+public/            Interface web (HTML/CSS/JS) — estimateur + direction
 ```
+
+### Endpoints du Directeur général IA
+
+| Méthode | Route                             | Rôle                                            |
+| ------- | --------------------------------- | ----------------------------------------------- |
+| `GET`   | `/api/direction/tableau-de-bord`  | KPI et données agrégées (déterministe, sans IA) |
+| `POST`  | `/api/direction/rapport`          | Rapport `quotidien` ou `hebdomadaire`           |
+| `POST`  | `/api/direction/question`         | Réponse à une question libre de la direction    |
 
 ## Configuration
 
@@ -58,6 +99,7 @@ public/            Interface web (HTML/CSS/JS)
 | ------------------- | --------------------------------------- | --------------- |
 | `ANTHROPIC_API_KEY` | Clé API Anthropic (requise)             | —               |
 | `ESTIMATEUR_MODEL`  | Modèle vision utilisé                   | `claude-opus-5` |
+| `DIRECTEUR_MODEL`   | Modèle du Directeur général IA          | `claude-opus-5` |
 | `PORT`              | Port du serveur                         | `3000`          |
 
 ## Limites

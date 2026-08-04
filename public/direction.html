@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Directeur général IA — Génie civil</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="entete">
+      <div class="entete-contenu">
+        <h1>Directeur général IA <span>Génie civil</span></h1>
+        <p>
+          L'agent qui coordonne l'entreprise : rapports, KPI, risques et
+          décisions fondées sur les données.
+        </p>
+        <nav class="nav-app">
+          <a href="index.html">Estimateur</a>
+          <a href="direction.html" class="actif">Directeur général IA ⭐</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <!-- Tableau de bord (données déterministes) -->
+      <section class="carte">
+        <h2>Tableau de bord — Exercice <span id="exercice">…</span></h2>
+        <div class="kpi-grille" id="kpiGrille"></div>
+      </section>
+
+      <!-- Rapports IA -->
+      <section class="carte">
+        <h2>Rapport de direction</h2>
+        <p class="aide">
+          Le Directeur général IA synthétise l'activité, hiérarchise les
+          problèmes et propose des décisions.
+        </p>
+        <div class="barre-actions">
+          <button class="bouton-principal" data-periode="quotidien">
+            Rapport quotidien
+          </button>
+          <button class="bouton-secondaire" data-periode="hebdomadaire">
+            Rapport hebdomadaire
+          </button>
+        </div>
+        <div id="rapport" hidden></div>
+      </section>
+
+      <!-- Questions libres -->
+      <section class="carte">
+        <h2>Poser une question à la direction</h2>
+        <p class="aide">
+          Interrogez l'agent en langage naturel sur vos projets, clients ou
+          risques.
+        </p>
+        <div class="exemples" id="exemples">
+          <button class="puce">Quels projets perdent de l'argent ?</button>
+          <button class="puce">Quel client est le plus rentable cette année ?</button>
+          <button class="puce">Quels sont les 10 plus gros risques cette semaine ?</button>
+        </div>
+        <div class="champ-question">
+          <textarea
+            id="champQuestion"
+            rows="2"
+            placeholder="Ex : Quels chantiers risquent de dépasser leur budget ?"
+          ></textarea>
+          <button class="bouton-principal" id="boutonQuestion">Demander</button>
+        </div>
+        <div id="reponse" hidden></div>
+      </section>
+
+      <section class="carte" id="chargement" hidden>
+        <div class="loader"></div>
+        <p id="messageChargement">Analyse en cours…</p>
+      </section>
+
+      <section class="carte erreur" id="carteErreur" hidden>
+        <h2>Erreur</h2>
+        <p id="messageErreur"></p>
+      </section>
+    </main>
+
+    <footer>
+      <p>
+        Directeur général IA — outil d'aide à la décision. Les données affichées
+        sont des données de démonstration.
+      </p>
+    </footer>
+
+    <script src="direction.js"></script>
+  </body>
+</html>
