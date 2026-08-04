@@ -1,0 +1,11 @@
+# Base de données runtime
+/data/
+*.db
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.venv/
+venv/
