@@ -1,0 +1,15 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+
+# Secrets & environnement
+.env
+
+# Sorties générées
+sorties/
+*.md.out
+.DS_Store
