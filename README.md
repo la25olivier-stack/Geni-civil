@@ -21,6 +21,61 @@ Le pipeline se déroule en trois étapes :
    check-list métier ; Claude renvoie les postes manquants ou à vérifier, avec
    une gravité.
 
+## Agents IA de l'entreprise
+
+En plus de l'estimateur de plans, l'application héberge une **équipe de 12 agents
+IA** spécialisés, coordonnée par un **Directeur général IA**. Interface :
+`http://localhost:3000/agents.html`.
+
+| # | Agent | Rôle principal |
+| - | ----- | -------------- |
+| 1 | 🧭 Directeur général | Coordonne les agents, suit les KPI, propose des décisions |
+| 2 | 💰 Directeur financier | Trésorerie, marges, rentabilité, comptes, coûts |
+| 3 | 📐 Estimateur | Métré, ressources, oublis, première estimation |
+| 4 | 🏗️ Chargé de projet | Coûts, avancement, échéancier, changements, extras |
+| 5 | 📋 Appels d'offres | SEAO, MERX, Hydro-Québec, municipalités, Rio Tinto |
+| 6 | 👷 RH | Formations, permis, certificats, CCQ, intégration |
+| 7 | 🦺 SST | Analyses de risques, inspections, incidents, CNESST |
+| 8 | ✅ Qualité | Conformité devis, normes MTQ, essais, déficiences |
+| 9 | 🚜 Équipements | Flotte, entretiens, garanties, coûts, carburant |
+| 10 | 🗂️ Gestion documentaire | Classement et recherche de tous les documents |
+| 11 | 🛒 Achats | Fournisseurs, bons de commande, délais, économies |
+| 12 | ⚖️ Juridique | Contrats, clauses à risque, assurances, avis de changement |
+
+### Comment ils communiquent
+
+Le **Directeur général** est l'orchestrateur. Quand on lui pose une question
+(ex. « Quels projets perdent de l'argent ? »), il consulte automatiquement les
+agents spécialistes concernés via le mécanisme d'outils (*tool use*) de Claude,
+récupère leurs réponses structurées, puis produit une synthèse pour la
+direction. L'interface affiche la synthèse **et** le détail des agents consultés.
+
+```
+                    Directeur général IA
+                            │
+      ┌─────────────────────┼──────────────────────┐
+ Directeur financier   Chargé de projet      Appels d'offres
+                            │                       │
+                      Estimateur IA         Gestion documentaire
+        ┌─────────────┬──────────────┬──────────────┐
+     RH IA          SST IA        Achats IA     Juridique IA
+        │              │
+   Équipements IA   Qualité IA
+```
+
+### API des agents
+
+| Endpoint | Méthode | Description |
+| -------- | ------- | ----------- |
+| `/api/agents` | GET | Liste des agents (métadonnées, organigramme) |
+| `/api/agents/:id` | POST | Interroge un agent précis — corps `{ question, contexte? }` |
+| `/api/dg` | POST | Interroge le Directeur général (orchestration) — `{ question, contexte? }` |
+
+Les agents raisonnent à partir du **contexte fourni** dans la requête et de leur
+expertise métier ; les sources (Acomba, SEAO, Google Drive, courriels…) sont les
+connecteurs visés. Tant qu'un connecteur n'est pas branché, l'agent signale les
+données qui lui manqueraient pour être précis.
+
 ## Prérequis
 
 - Node.js 18+
@@ -46,10 +101,13 @@ PDF) et lancez l'estimation.
 ## Structure du projet
 
 ```
-server.js          Serveur Express + endpoint /api/estimation
-src/estimator.js   Appels au modèle Claude (analyse vision + contrôle des oublis)
-src/pricing.js     Bordereau de prix unitaires et calcul de l'estimation
-public/            Interface web (HTML/CSS/JS)
+server.js                 Serveur Express + endpoints /api/estimation, /api/agents, /api/dg
+src/estimator.js          Appels au modèle Claude (analyse vision + contrôle des oublis)
+src/pricing.js            Bordereau de prix unitaires et calcul de l'estimation
+src/agents/definitions.js Définition des 12 agents (rôles, sources, prompts, organigramme)
+src/agents/runtime.js     Exécution d'un agent + orchestration multi-agents du DG
+public/index.html         Interface de l'estimateur de plans
+public/agents.html        Interface des agents IA (chat + organigramme)
 ```
 
 ## Configuration
@@ -58,6 +116,7 @@ public/            Interface web (HTML/CSS/JS)
 | ------------------- | --------------------------------------- | --------------- |
 | `ANTHROPIC_API_KEY` | Clé API Anthropic (requise)             | —               |
 | `ESTIMATEUR_MODEL`  | Modèle vision utilisé                   | `claude-opus-5` |
+| `AGENTS_MODEL`      | Modèle utilisé par les agents IA        | `ESTIMATEUR_MODEL` |
 | `PORT`              | Port du serveur                         | `3000`          |
 
 ## Limites

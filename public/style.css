@@ -336,3 +336,318 @@ footer {
   font-size: 0.82rem;
   padding: 1.5rem 1rem 2.5rem;
 }
+
+/* --- Navigation entre pages ------------------------------------------------ */
+
+.nav-onglets {
+  margin-top: 1rem;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.nav-onglets a {
+  color: #fff;
+  text-decoration: none;
+  padding: 0.35rem 0.9rem;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  background: rgba(255, 255, 255, 0.12);
+  transition: background 0.15s;
+}
+
+.nav-onglets a:hover {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.nav-onglets a.actif {
+  background: var(--accent);
+  color: #1b1b1b;
+  font-weight: 600;
+}
+
+/* --- Sélecteur d'agents ---------------------------------------------------- */
+
+.selecteur-agents {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0.75rem 0 1.25rem;
+}
+
+.puce-agent {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  border: 1px solid var(--bordure);
+  background: var(--carte);
+  color: var(--texte);
+  padding: 0.4rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.puce-agent:hover {
+  border-color: var(--bleu-clair);
+}
+
+.puce-agent.actif {
+  background: var(--bleu);
+  color: #fff;
+  border-color: var(--bleu);
+}
+
+.puce-agent.puce-dg {
+  border-color: var(--accent);
+  font-weight: 600;
+}
+
+.puce-agent.puce-dg.actif {
+  background: var(--accent);
+  color: #1b1b1b;
+  border-color: var(--accent);
+}
+
+.puce-emoji {
+  font-size: 1rem;
+}
+
+.champ-label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--bleu);
+  margin: 0.75rem 0 0.3rem;
+}
+
+.champ-texte {
+  width: 100%;
+  border: 1px solid var(--bordure);
+  border-radius: 8px;
+  padding: 0.65rem 0.8rem;
+  font-family: inherit;
+  font-size: 0.95rem;
+  resize: vertical;
+}
+
+.champ-texte:focus {
+  outline: none;
+  border-color: var(--bleu-clair);
+}
+
+.exemples {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0.75rem 0 0.25rem;
+}
+
+.exemples-titre {
+  font-size: 0.82rem;
+  color: var(--gris);
+}
+
+.exemple-chip {
+  border: 1px dashed var(--bleu-clair);
+  background: #eef6fb;
+  color: var(--bleu);
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.exemple-chip:hover {
+  background: #dceeffe0;
+}
+
+/* --- Réponse des agents ---------------------------------------------------- */
+
+.reponse-entete {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.reponse-entete h2 {
+  margin: 0;
+}
+
+.reponse-emoji {
+  font-size: 1.6rem;
+}
+
+.bloc-synthese {
+  background: #eef6fb;
+  border-left: 4px solid var(--bleu);
+  border-radius: 0 8px 8px 0;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+}
+
+.bloc-synthese p {
+  margin: 0 0 0.5rem;
+}
+
+.bloc-synthese p:last-child {
+  margin-bottom: 0;
+}
+
+.agent-synthese {
+  font-weight: 600;
+  font-size: 1.02rem;
+}
+
+.agent-analyse p {
+  margin: 0.4rem 0;
+}
+
+.sous-bloc {
+  margin-top: 0.9rem;
+}
+
+.sous-bloc h4 {
+  margin: 0 0 0.35rem;
+  font-size: 0.9rem;
+  color: var(--bleu);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.liste-simple {
+  margin: 0;
+  padding-left: 1.2rem;
+}
+
+.liste-simple li {
+  margin: 0.2rem 0;
+}
+
+.liste-alertes {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.liste-alertes li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 0.4rem 0;
+}
+
+.titre-consultations {
+  margin: 1.25rem 0 0.5rem;
+  font-size: 1rem;
+  color: var(--bleu);
+  border-top: 1px solid var(--bordure);
+  padding-top: 0.75rem;
+}
+
+.consultation {
+  border: 1px solid var(--bordure);
+  border-radius: 8px;
+  margin-bottom: 0.5rem;
+  overflow: hidden;
+}
+
+.consultation summary {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 0.8rem;
+  cursor: pointer;
+  background: var(--fond);
+  font-size: 0.9rem;
+}
+
+.consultation summary::-webkit-details-marker {
+  display: none;
+}
+
+.consultation-q {
+  color: var(--gris);
+  font-style: italic;
+  font-size: 0.82rem;
+}
+
+.consultation-corps {
+  padding: 0.75rem 0.9rem;
+}
+
+/* --- Organigramme ---------------------------------------------------------- */
+
+.organigramme {
+  margin-top: 1rem;
+}
+
+.orga-enfants {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+.orga-noeud {
+  border: 1px solid var(--bordure);
+  border-radius: 10px;
+  padding: 0.75rem 0.9rem;
+  background: var(--carte);
+  cursor: pointer;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.orga-noeud:hover {
+  border-color: var(--bleu-clair);
+  box-shadow: var(--ombre);
+}
+
+.orga-dg {
+  border-color: var(--accent);
+  border-width: 2px;
+  background: #fffaf0;
+}
+
+.orga-tete {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.orga-etoiles {
+  color: var(--accent);
+  font-size: 0.75rem;
+  margin-left: auto;
+}
+
+.orga-mission {
+  margin: 0.35rem 0 0.3rem;
+  font-size: 0.85rem;
+  color: var(--gris);
+}
+
+.orga-rattache {
+  margin: 0 0 0.3rem;
+  font-size: 0.78rem;
+  color: var(--bleu-clair);
+}
+
+.orga-sources {
+  margin: 0.3rem 0 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+.tag {
+  background: var(--fond);
+  border: 1px solid var(--bordure);
+  border-radius: 999px;
+  padding: 0.1rem 0.5rem;
+  font-size: 0.72rem;
+  color: var(--gris);
+}

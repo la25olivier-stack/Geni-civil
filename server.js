@@ -4,6 +4,8 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { analyserPlans, verifierOublis } from "./src/estimator.js";
 import { chiffrer } from "./src/pricing.js";
+import { TOUS_AGENTS, trouverAgent } from "./src/agents/definitions.js";
+import { executerAgent, orchestrer } from "./src/agents/runtime.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -24,9 +26,62 @@ const upload = multer({
 });
 
 app.use(express.static(path.join(__dirname, "public")));
+app.use(express.json({ limit: "1mb" }));
 
 app.get("/api/sante", (_req, res) => {
   res.json({ statut: "ok", cleConfiguree: Boolean(process.env.ANTHROPIC_API_KEY) });
+});
+
+// --- Agents IA -------------------------------------------------------------
+
+/** Métadonnées des agents (sans les prompts), pour l'organigramme et l'UI. */
+app.get("/api/agents", (_req, res) => {
+  const agents = TOUS_AGENTS.map((a) => ({
+    id: a.id,
+    nom: a.nom,
+    emoji: a.emoji,
+    priorite: a.priorite,
+    rattachement: a.rattachement,
+    mission: a.mission,
+    sources: a.sources,
+    competences: a.competences,
+    exemples: a.exemples,
+  }));
+  res.json({ agents });
+});
+
+/** Interroge un agent précis (le DG passe par l'orchestrateur). */
+app.post("/api/agents/:id", async (req, res) => {
+  const { id } = req.params;
+  const { question, contexte } = req.body || {};
+  if (!trouverAgent(id)) {
+    return res.status(404).json({ erreur: `Agent inconnu : ${id}` });
+  }
+  if (!question || typeof question !== "string" || !question.trim()) {
+    return res.status(400).json({ erreur: "La question est requise." });
+  }
+  try {
+    const reponse = await executerAgent(id, question.trim(), contexte || "");
+    res.json(reponse);
+  } catch (err) {
+    console.error(`Erreur agent ${id} :`, err);
+    res.status(500).json({ erreur: err?.message || "Erreur de l'agent." });
+  }
+});
+
+/** Interroge directement le Directeur général (orchestration multi-agents). */
+app.post("/api/dg", async (req, res) => {
+  const { question, contexte } = req.body || {};
+  if (!question || typeof question !== "string" || !question.trim()) {
+    return res.status(400).json({ erreur: "La question est requise." });
+  }
+  try {
+    const reponse = await orchestrer(question.trim(), contexte || "");
+    res.json(reponse);
+  } catch (err) {
+    console.error("Erreur orchestration DG :", err);
+    res.status(500).json({ erreur: err?.message || "Erreur du Directeur général." });
+  }
 });
 
 /**

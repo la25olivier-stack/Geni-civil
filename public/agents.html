@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Agents IA — Génie civil</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="entete">
+      <div class="entete-contenu">
+        <h1>Agents IA <span>Génie civil</span></h1>
+        <p>
+          Une équipe d'agents spécialisés, coordonnée par le Directeur général,
+          au service de votre entreprise.
+        </p>
+        <nav class="nav-onglets">
+          <a href="agents.html" class="actif">Agents IA</a>
+          <a href="index.html">Estimateur (plans)</a>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section class="carte">
+        <h2>Poser une question</h2>
+        <p class="aide">
+          Sélectionnez un agent. Le <strong>Directeur général</strong> consulte
+          automatiquement les autres agents pour vous répondre.
+        </p>
+
+        <div class="selecteur-agents" id="selecteurAgents"></div>
+
+        <label class="champ-label" for="contexte">Contexte (facultatif)</label>
+        <textarea
+          id="contexte"
+          class="champ-texte"
+          rows="3"
+          placeholder="Données ou précisions utiles : chiffres, extrait de contrat, avis d'appel d'offres…"
+        ></textarea>
+
+        <label class="champ-label" for="question">Question</label>
+        <textarea
+          id="question"
+          class="champ-texte"
+          rows="2"
+          placeholder="Ex. : Quels projets perdent de l'argent ?"
+        ></textarea>
+
+        <div class="exemples" id="exemples"></div>
+
+        <button id="boutonEnvoyer" class="bouton-principal">Envoyer</button>
+      </section>
+
+      <section class="carte" id="chargement" hidden>
+        <div class="loader"></div>
+        <p id="messageChargement">L'agent réfléchit…</p>
+      </section>
+
+      <section class="carte erreur" id="carteErreur" hidden>
+        <h2>Erreur</h2>
+        <p id="messageErreur"></p>
+      </section>
+
+      <section class="carte" id="reponse" hidden>
+        <div id="reponseContenu"></div>
+      </section>
+
+      <section class="carte">
+        <h2>Organigramme des agents</h2>
+        <p class="aide">
+          12 agents spécialisés + le Directeur général qui les coordonne.
+        </p>
+        <div id="organigramme" class="organigramme"></div>
+      </section>
+    </main>
+
+    <footer>
+      <p>
+        Agents IA — aide à la décision. Les réponses doivent être validées par
+        les responsables métier.
+      </p>
+    </footer>
+
+    <script src="agents.js"></script>
+  </body>
+</html>
