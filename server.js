@@ -5,7 +5,11 @@ import { fileURLToPath } from "url";
 import { analyserPlans, verifierOublis } from "./src/estimator.js";
 import { chiffrer } from "./src/pricing.js";
 import { TOUS_AGENTS, trouverAgent } from "./src/agents/definitions.js";
-import { executerAgent, orchestrer } from "./src/agents/runtime.js";
+import {
+  executerAgent,
+  orchestrer,
+  verifierProvider,
+} from "./src/agents/runtime.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -33,6 +37,15 @@ app.get("/api/sante", (_req, res) => {
 });
 
 // --- Agents IA -------------------------------------------------------------
+
+/** État du fournisseur d'IA (Ollama local gratuit ou Claude). */
+app.get("/api/agents/statut", async (_req, res) => {
+  try {
+    res.json(await verifierProvider());
+  } catch (err) {
+    res.status(500).json({ erreur: err?.message || "Statut indisponible." });
+  }
+});
 
 /** Métadonnées des agents (sans les prompts), pour l'organigramme et l'UI. */
 app.get("/api/agents", (_req, res) => {

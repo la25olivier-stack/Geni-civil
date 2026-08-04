@@ -365,6 +365,28 @@ footer {
   font-weight: 600;
 }
 
+/* --- Bannière de statut du moteur d'IA ------------------------------------ */
+
+.banniere {
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1.25rem;
+  font-size: 0.9rem;
+  box-shadow: var(--ombre);
+}
+
+.banniere.ok {
+  background: #e8f6f2;
+  border-left: 4px solid var(--vert);
+  color: #10514a;
+}
+
+.banniere.attention {
+  background: #fff4e0;
+  border-left: 4px solid var(--accent);
+  color: #7a4d00;
+}
+
 /* --- Sélecteur d'agents ---------------------------------------------------- */
 
 .selecteur-agents {

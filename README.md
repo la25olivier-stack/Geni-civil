@@ -76,27 +76,70 @@ expertise métier ; les sources (Acomba, SEAO, Google Drive, courriels…) sont 
 connecteurs visés. Tant qu'un connecteur n'est pas branché, l'agent signale les
 données qui lui manqueraient pour être précis.
 
+### Moteur d'IA : gratuit (Ollama) ou Claude
+
+Les agents fonctionnent avec **deux moteurs au choix** :
+
+- **Ollama — gratuit, local, sans clé** (recommandé si vous n'avez pas de clé
+  API). Un modèle d'IA tourne directement sur votre ordinateur.
+- **Claude** — meilleure qualité, mais nécessite une `ANTHROPIC_API_KEY`
+  (payant).
+
+Par défaut : Claude si une clé est présente, **sinon Ollama automatiquement**.
+Forçable avec `AGENTS_PROVIDER=ollama` ou `AGENTS_PROVIDER=anthropic`.
+
+**Utiliser Ollama (gratuit) :**
+
+```bash
+# 1. Installez Ollama : https://ollama.com
+# 2. Téléchargez un modèle qui gère les outils du Directeur général :
+ollama pull llama3.1
+# 3. Démarrez le serveur Ollama :
+ollama serve
+# 4. Dans un autre terminal, démarrez l'application (sans clé API) :
+npm start
+```
+
+Ouvrez `http://localhost:3000/agents.html` : une bannière indique le moteur
+actif et s'il est prêt. L'estimateur de plans (vision) reste, lui, sur Claude et
+nécessite une clé.
+
+> ℹ️ Ollama demande un ordinateur assez puissant (idéalement 16 Go de RAM). Pour
+> une machine plus modeste, essayez un modèle plus léger, p. ex.
+> `OLLAMA_MODEL=llama3.2`, puis `ollama pull llama3.2`.
+
 ## Prérequis
 
 - Node.js 18+
-- Une clé API Anthropic
+- **Pour les agents IA** : soit Ollama (gratuit, voir plus haut), soit une clé
+  API Anthropic.
+- **Pour l'estimateur de plans (vision)** : une clé API Anthropic.
 
 ## Installation
 
 ```bash
 npm install
-cp .env.example .env   # puis renseignez ANTHROPIC_API_KEY
+cp .env.example .env   # configurez le moteur (Ollama gratuit, ou clé Claude)
 ```
 
 ## Lancement
+
+Avec Ollama (gratuit, agents seulement) :
+
+```bash
+ollama serve            # dans un terminal
+npm start               # dans un autre terminal
+```
+
+Avec Claude (agents + estimateur de plans) :
 
 ```bash
 export ANTHROPIC_API_KEY=sk-ant-...   # ou via un fichier .env chargé par votre shell
 npm start
 ```
 
-Ouvrez ensuite http://localhost:3000, téléversez vos plans (PNG, JPEG, WEBP ou
-PDF) et lancez l'estimation.
+Ouvrez ensuite http://localhost:3000/agents.html pour les agents, ou
+http://localhost:3000 pour l'estimateur de plans.
 
 ## Structure du projet
 
@@ -115,8 +158,11 @@ public/agents.html        Interface des agents IA (chat + organigramme)
 | Variable            | Rôle                                    | Défaut          |
 | ------------------- | --------------------------------------- | --------------- |
 | `ANTHROPIC_API_KEY` | Clé API Anthropic (requise)             | —               |
-| `ESTIMATEUR_MODEL`  | Modèle vision utilisé                   | `claude-opus-5` |
-| `AGENTS_MODEL`      | Modèle utilisé par les agents IA        | `ESTIMATEUR_MODEL` |
+| `AGENTS_PROVIDER`   | Moteur des agents : `ollama` ou `anthropic` | auto (clé → Claude, sinon Ollama) |
+| `OLLAMA_HOST`       | URL du serveur Ollama local             | `http://localhost:11434` |
+| `OLLAMA_MODEL`      | Modèle Ollama utilisé par les agents    | `llama3.1`      |
+| `ESTIMATEUR_MODEL`  | Modèle vision de l'estimateur (Claude)  | `claude-opus-5` |
+| `AGENTS_MODEL`      | Modèle Claude des agents (si Anthropic) | `ESTIMATEUR_MODEL` |
 | `PORT`              | Port du serveur                         | `3000`          |
 
 ## Limites

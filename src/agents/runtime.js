@@ -1,14 +1,12 @@
-import Anthropic from "@anthropic-ai/sdk";
 import {
   AGENTS,
   DIRECTEUR_GENERAL,
   trouverAgent,
   promptSysteme,
 } from "./definitions.js";
+import { analyseStructuree, tourConversation } from "./llm.js";
 
-const MODEL = process.env.AGENTS_MODEL || process.env.ESTIMATEUR_MODEL || "claude-opus-5";
-
-const client = new Anthropic();
+export { infoProvider, verifierProvider } from "./llm.js";
 
 // Nombre maximal d'aller-retours d'outils que le DG peut faire dans une session
 // (garde-fou contre une boucle de consultation qui ne se termine pas).
@@ -81,15 +79,13 @@ export async function executerAgent(agentId, question, contexte = "") {
     ? `Contexte fourni :\n${contexte}\n\nQuestion :\n${question}`
     : `Question :\n${question}`;
 
-  const response = await client.messages.create({
-    model: MODEL,
-    max_tokens: 4000,
+  const data = await analyseStructuree({
     system: promptSysteme(agent),
-    output_config: { format: { type: "json_schema", schema: SCHEMA_REPONSE_AGENT } },
-    messages: [{ role: "user", content: contenu }],
+    content: contenu,
+    schema: SCHEMA_REPONSE_AGENT,
   });
 
-  return { agent: agentId, nom: agent.nom, ...extraireJson(response) };
+  return { agent: agentId, nom: agent.nom, ...data };
 }
 
 /**
@@ -100,7 +96,7 @@ function outilsSpecialistes() {
   return AGENTS.map((a) => ({
     name: `consulter_${a.id}`,
     description: `Consulter ${a.nom}. Mission : ${a.mission} Sources : ${a.sources.join(", ")}.`,
-    input_schema: {
+    schema: {
       type: "object",
       properties: {
         question: {
@@ -142,21 +138,15 @@ export async function orchestrer(question, contexte = "") {
   let derniereReponseTexte = "";
 
   for (let tour = 0; tour < MAX_TOURS_ORCHESTRATION; tour++) {
-    const response = await client.messages.create({
-      model: MODEL,
-      max_tokens: 4000,
+    const resultat = await tourConversation({
       system: DIRECTEUR_GENERAL.prompt,
-      tools,
       messages,
+      tools,
     });
 
-    derniereReponseTexte = response.content
-      .filter((b) => b.type === "text")
-      .map((b) => b.text)
-      .join("\n")
-      .trim();
+    if (resultat.text) derniereReponseTexte = resultat.text;
 
-    if (response.stop_reason !== "tool_use") {
+    if (resultat.stopReason !== "tool_use" || resultat.toolCalls.length === 0) {
       // Le DG a produit sa synthèse finale.
       return {
         agent: "dg",
@@ -166,42 +156,42 @@ export async function orchestrer(question, contexte = "") {
       };
     }
 
-    // Rejoue les appels d'outils : exécute chaque agent consulté.
-    messages.push({ role: "assistant", content: response.content });
+    // Mémorise l'appel d'outils dans l'historique.
+    messages.push({
+      role: "assistant",
+      text: resultat.text,
+      toolCalls: resultat.toolCalls,
+    });
 
-    const blocsOutils = response.content.filter((b) => b.type === "tool_use");
+    // Exécute chaque agent consulté et prépare les résultats d'outils.
     const resultats = await Promise.all(
-      blocsOutils.map(async (bloc) => {
-        const agentId = bloc.name.replace(/^consulter_/, "");
+      resultat.toolCalls.map(async (tc) => {
+        const agentId = tc.name.replace(/^consulter_/, "");
         try {
           const rep = await executerAgent(
             agentId,
-            bloc.input.question,
-            bloc.input.contexte || contexte
+            tc.input.question,
+            tc.input.contexte || contexte
           );
           consultations.push({
             agent: agentId,
             nom: rep.nom,
-            question: bloc.input.question,
+            question: tc.input.question,
             reponse: rep,
           });
-          return {
-            type: "tool_result",
-            tool_use_id: bloc.id,
-            content: JSON.stringify(rep),
-          };
+          return { id: tc.id, name: tc.name, contenu: JSON.stringify(rep) };
         } catch (err) {
           return {
-            type: "tool_result",
-            tool_use_id: bloc.id,
-            is_error: true,
-            content: `Erreur lors de la consultation de ${agentId} : ${err.message}`,
+            id: tc.id,
+            name: tc.name,
+            contenu: `Erreur lors de la consultation de ${agentId} : ${err.message}`,
+            erreur: true,
           };
         }
       })
     );
 
-    messages.push({ role: "user", content: resultats });
+    messages.push({ role: "outils", resultats });
   }
 
   // Sécurité : trop de tours — on renvoie ce qu'on a.
@@ -213,13 +203,4 @@ export async function orchestrer(question, contexte = "") {
       "Le Directeur général n'a pas pu conclure après plusieurs consultations. Reformulez la question ou fournissez plus de contexte.",
     consultations,
   };
-}
-
-function extraireJson(response) {
-  if (response.stop_reason === "refusal") {
-    throw new Error("La demande a été refusée par le modèle.");
-  }
-  const bloc = response.content.find((b) => b.type === "text");
-  if (!bloc) throw new Error("Réponse du modèle vide.");
-  return JSON.parse(bloc.text);
 }

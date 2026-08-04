@@ -10,9 +10,31 @@ const messageErreur = document.getElementById("messageErreur");
 const reponse = document.getElementById("reponse");
 const reponseContenu = document.getElementById("reponseContenu");
 const organigramme = document.getElementById("organigramme");
+const banniereStatut = document.getElementById("banniereStatut");
 
 let agents = [];
 let agentSelectionne = "dg";
+
+// --- Statut du moteur d'IA --------------------------------------------------
+
+async function chargerStatut() {
+  try {
+    const rep = await fetch("/api/agents/statut");
+    const s = await rep.json();
+    banniereStatut.hidden = false;
+    banniereStatut.classList.toggle("ok", s.pret);
+    banniereStatut.classList.toggle("attention", !s.pret);
+    const moteur =
+      s.provider === "ollama"
+        ? `IA locale gratuite (Ollama · ${s.modele})`
+        : `Claude (${s.modele})`;
+    banniereStatut.innerHTML = s.pret
+      ? `<strong>✅ Moteur prêt :</strong> ${escapeHtml(moteur)}.`
+      : `<strong>⚠️ Moteur non prêt :</strong> ${escapeHtml(moteur)}.<br>${escapeHtml(s.message)}`;
+  } catch {
+    // Silencieux : le statut est indicatif.
+  }
+}
 
 // --- Chargement des agents --------------------------------------------------
 
@@ -314,6 +336,7 @@ function escapeHtml(s) {
   );
 }
 
+chargerStatut();
 chargerAgents().catch((err) => {
   messageErreur.textContent =
     "Impossible de charger les agents : " + err.message;
