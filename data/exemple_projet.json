@@ -1,0 +1,85 @@
+{
+  "nom": "Construction pont routier - Rivière des Prairies",
+  "date_debut": "2026-09-01",
+  "devise": "EUR",
+  "seuil_alerte_pct": 5.0,
+  "taches": [
+    {
+      "identifiant": "T01",
+      "nom": "Études géotechniques et relevés",
+      "duree_jours": 15,
+      "dependances": [],
+      "budget_prevu": 120000,
+      "cout_reel": 118000,
+      "avancement_pct": 100,
+      "categorie": "Études",
+      "responsable": "Bureau d'études SOL+"
+    },
+    {
+      "identifiant": "T02",
+      "nom": "Conception structurelle et plans",
+      "duree_jours": 30,
+      "dependances": ["T01"],
+      "budget_prevu": 250000,
+      "cout_reel": 180000,
+      "avancement_pct": 60,
+      "categorie": "Études",
+      "responsable": "Ingénierie Structura"
+    },
+    {
+      "identifiant": "T03",
+      "nom": "Terrassement et fondations culées",
+      "duree_jours": 40,
+      "dependances": ["T02"],
+      "budget_prevu": 900000,
+      "cout_reel": 210000,
+      "avancement_pct": 15,
+      "categorie": "Gros oeuvre",
+      "responsable": "Terrassement Nord"
+    },
+    {
+      "identifiant": "T04",
+      "nom": "Approvisionnement acier et coffrages",
+      "duree_jours": 25,
+      "dependances": ["T02"],
+      "budget_prevu": 650000,
+      "cout_reel": 0,
+      "avancement_pct": 0,
+      "categorie": "Approvisionnement",
+      "responsable": "Achats projet"
+    },
+    {
+      "identifiant": "T05",
+      "nom": "Coulage tablier et piles",
+      "duree_jours": 55,
+      "dependances": ["T03", "T04"],
+      "budget_prevu": 1400000,
+      "cout_reel": 0,
+      "avancement_pct": 0,
+      "categorie": "Gros oeuvre",
+      "responsable": "Béton Précision"
+    },
+    {
+      "identifiant": "T06",
+      "nom": "Chaussée, garde-corps et finitions",
+      "duree_jours": 30,
+      "dependances": ["T05"],
+      "budget_prevu": 480000,
+      "cout_reel": 0,
+      "avancement_pct": 0,
+      "categorie": "Second oeuvre",
+      "responsable": "Revêtements Express"
+    },
+    {
+      "identifiant": "T07",
+      "nom": "Contrôles, essais de charge et réception",
+      "duree_jours": 15,
+      "dependances": ["T06"],
+      "budget_prevu": 130000,
+      "cout_reel": 0,
+      "avancement_pct": 0,
+      "categorie": "Contrôle qualité",
+      "responsable": "Bureau Véritas"
+    }
+  ]
+}

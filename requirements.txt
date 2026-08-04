@@ -1,0 +1,6 @@
+# Dépendance requise uniquement pour la commande `analyser` (analyse IA).
+# Les calculs d'échéancier, de coûts et d'alertes fonctionnent sans elle.
+anthropic>=0.116.0
+
+# Outils de développement
+pytest>=8.0.0
