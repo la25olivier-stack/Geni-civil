@@ -336,3 +336,431 @@ footer {
   font-size: 0.82rem;
   padding: 1.5rem 1rem 2.5rem;
 }
+
+/* --- Onglets --------------------------------------------------------------- */
+
+.onglets {
+  max-width: 960px;
+  margin: -1.5rem auto 0;
+  padding: 0 1rem;
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.onglet {
+  background: var(--carte);
+  border: 1px solid var(--bordure);
+  border-bottom: none;
+  color: var(--gris);
+  padding: 0.7rem 1.2rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-radius: 10px 10px 0 0;
+  cursor: pointer;
+  box-shadow: var(--ombre);
+  transition: color 0.15s, background 0.15s;
+}
+
+.onglet:hover {
+  color: var(--bleu, #1b4965);
+}
+
+.onglet.actif {
+  color: var(--bleu, #1b4965);
+  border-bottom: 3px solid var(--accent);
+}
+
+.onglets + main {
+  margin-top: 0.75rem;
+}
+
+.panneau {
+  display: none;
+}
+
+.panneau.actif {
+  display: block;
+}
+
+/* --- Champs communs -------------------------------------------------------- */
+
+.champ-libelle {
+  display: block;
+  margin: 1rem 0 0.35rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--bleu, #1b4965);
+}
+
+.zone-texte,
+.champ-recherche {
+  width: 100%;
+  padding: 0.6rem 0.75rem;
+  border: 1px solid var(--bordure);
+  border-radius: 8px;
+  font: inherit;
+  color: var(--texte);
+  background: #fff;
+}
+
+.zone-texte:focus,
+.champ-recherche:focus {
+  outline: none;
+  border-color: var(--bleu-clair);
+}
+
+.zone-texte {
+  resize: vertical;
+}
+
+.bouton-secondaire {
+  margin-top: 0.75rem;
+  background: #fff;
+  color: var(--bleu, #1b4965);
+  border: 1px solid var(--bleu-clair);
+  padding: 0.55rem 1rem;
+  font-size: 0.92rem;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.bouton-secondaire:hover {
+  background: #eef6fb;
+}
+
+.bouton-principal.compact {
+  margin-top: 0;
+  padding: 0.6rem 1.1rem;
+  white-space: nowrap;
+}
+
+.bouton-lien {
+  background: none;
+  border: none;
+  color: var(--bleu-clair);
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.88rem;
+  padding: 0.3rem 0;
+}
+
+.bouton-lien:hover {
+  text-decoration: underline;
+}
+
+.loader-inline {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 1rem;
+  color: var(--gris);
+  font-size: 0.9rem;
+}
+
+.loader.petit {
+  width: 22px;
+  height: 22px;
+  border-width: 3px;
+  margin: 0;
+}
+
+.erreur-inline {
+  margin-top: 1rem;
+  color: var(--rouge);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.sous-titre {
+  font-size: 1rem;
+  color: var(--bleu, #1b4965);
+  margin: 1.2rem 0 0.4rem;
+}
+
+/* --- Gestion documentaire -------------------------------------------------- */
+
+.barre-recherche {
+  display: flex;
+  gap: 0.6rem;
+  margin-top: 0.5rem;
+}
+
+.badge-type {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  background: var(--bleu-clair);
+  color: #fff;
+  white-space: nowrap;
+}
+
+.type-contrat {
+  background: #1b4965;
+}
+.type-plan {
+  background: #457b9d;
+}
+.type-avenant {
+  background: #8338ec;
+}
+.type-photo {
+  background: #2a9d8f;
+}
+.type-proces_verbal {
+  background: #e76f51;
+}
+.type-courriel {
+  background: #6b7a8d;
+}
+.type-fiche_technique {
+  background: #ee9b00;
+  color: #1b1b1b;
+}
+.type-rapport {
+  background: #c1121f;
+}
+.type-autre {
+  background: #adb5bd;
+}
+
+.liste-documents,
+.liste-resultats {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0 0;
+}
+
+.liste-documents .doc,
+.liste-resultats .resultat {
+  position: relative;
+  border: 1px solid var(--bordure);
+  border-radius: 10px;
+  padding: 0.9rem 1rem;
+  margin-bottom: 0.7rem;
+  background: #fff;
+}
+
+.doc-entete {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.doc-entete strong {
+  font-size: 0.98rem;
+}
+
+.doc-meta {
+  margin: 0.35rem 0 0;
+  font-size: 0.82rem;
+  color: var(--gris);
+}
+
+.doc-resume {
+  margin: 0.4rem 0 0;
+  font-size: 0.9rem;
+}
+
+.doc-tags {
+  margin-top: 0.5rem;
+  display: flex;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+}
+
+.tag {
+  font-size: 0.75rem;
+  background: var(--fond);
+  color: var(--gris);
+  padding: 0.15rem 0.5rem;
+  border-radius: 6px;
+}
+
+.doc-supprimer {
+  position: absolute;
+  top: 0.7rem;
+  right: 0.8rem;
+  background: none;
+  border: none;
+  color: var(--gris);
+  cursor: pointer;
+  font-size: 0.8rem;
+}
+
+.doc-supprimer:hover {
+  color: var(--rouge);
+}
+
+.score {
+  margin-left: auto;
+  font-weight: 700;
+  color: var(--vert);
+  font-variant-numeric: tabular-nums;
+}
+
+.vide {
+  list-style: none;
+  color: var(--gris);
+  font-style: italic;
+  padding: 0.5rem 0;
+}
+
+/* --- Achats ---------------------------------------------------------------- */
+
+.liste-offres {
+  margin-top: 1rem;
+  display: grid;
+  gap: 1rem;
+}
+
+.fournisseur {
+  border: 1px solid var(--bordure);
+  border-radius: 10px;
+  padding: 0.9rem 1rem;
+  background: var(--fond);
+}
+
+.fournisseur-entete {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+  margin-bottom: 0.6rem;
+}
+
+.four-nom {
+  flex: 1;
+  padding: 0.5rem 0.65rem;
+  border: 1px solid var(--bordure);
+  border-radius: 8px;
+  font: inherit;
+  font-weight: 600;
+}
+
+.four-supprimer {
+  background: none;
+  border: none;
+  color: var(--rouge);
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.articles {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.article {
+  display: grid;
+  grid-template-columns: 2.2fr 0.8fr 0.8fr 0.9fr 0.9fr auto;
+  gap: 0.4rem;
+  align-items: center;
+}
+
+.article input {
+  padding: 0.45rem 0.55rem;
+  border: 1px solid var(--bordure);
+  border-radius: 6px;
+  font: inherit;
+  min-width: 0;
+}
+
+.art-supprimer {
+  background: none;
+  border: none;
+  color: var(--rouge);
+  cursor: pointer;
+  font-size: 1.1rem;
+  line-height: 1;
+}
+
+.moins-disant td {
+  background: #eafaf6;
+  font-weight: 600;
+}
+
+.liste-economies,
+.liste-risques {
+  list-style: none;
+  padding: 0;
+  margin: 0.3rem 0 0;
+}
+
+.liste-economies li {
+  border-left: 4px solid var(--vert);
+  background: var(--fond);
+  border-radius: 0 8px 8px 0;
+  padding: 0.55rem 0.85rem;
+  margin-bottom: 0.5rem;
+}
+
+.liste-economies li p {
+  margin: 0.25rem 0 0;
+  font-size: 0.88rem;
+  color: var(--gris);
+}
+
+.gain {
+  color: var(--vert);
+  font-weight: 700;
+  margin-left: 0.4rem;
+}
+
+.liste-risques li {
+  border-left: 4px solid var(--accent);
+  background: var(--fond);
+  border-radius: 0 8px 8px 0;
+  padding: 0.5rem 0.85rem;
+  margin-bottom: 0.45rem;
+  font-size: 0.9rem;
+}
+
+.bon-commande {
+  border: 1px solid var(--bordure);
+  border-radius: 10px;
+  padding: 1rem;
+}
+
+.bc-entete {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.8rem;
+}
+
+.bc-ref {
+  display: block;
+  font-size: 0.78rem;
+  color: var(--gris);
+  letter-spacing: 0.03em;
+}
+
+.bc-delai {
+  font-size: 0.88rem;
+  color: var(--bleu, #1b4965);
+  font-weight: 600;
+}
+
+.four-ref {
+  font-size: 0.78rem;
+  color: var(--gris);
+}
+
+.bc-conditions {
+  margin-top: 0.8rem;
+  font-size: 0.88rem;
+  color: var(--gris);
+}
+
+@media (max-width: 620px) {
+  .article {
+    grid-template-columns: 1fr 1fr auto;
+  }
+}

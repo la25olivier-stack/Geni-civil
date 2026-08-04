@@ -1,15 +1,18 @@
-# Estimateur IA — Génie civil
+# Suite IA — Génie civil
 
-**Analyse vos plans, prépare une première estimation et vérifie les oublis.**
+**Vos agents IA au service du chantier : estimation, documentation, achats.**
 
-Application web qui exploite l'IA vision de Claude pour lire des plans de génie
-civil (images ou PDF), en extraire un métré de première approche, produire une
-estimation chiffrée à partir d'un bordereau de prix unitaires, et signaler les
-postes fréquemment oubliés.
+Application web qui regroupe plusieurs agents IA (basés sur Claude) pour une
+entreprise de génie civil. Chaque agent est accessible depuis son onglet.
 
-## Fonctionnement
+## Les agents
 
-Le pipeline se déroule en trois étapes :
+### Estimateur
+
+Lit des plans de génie civil (images ou PDF), en extrait un métré de première
+approche, produit une estimation chiffrée à partir d'un bordereau de prix
+unitaires, et signale les postes fréquemment oubliés. Le pipeline se déroule en
+trois étapes :
 
 1. **Analyse des plans** — les fichiers téléversés sont envoyés au modèle vision
    de Claude, qui identifie les ouvrages et estime leurs quantités (avec les
@@ -20,6 +23,30 @@ Le pipeline se déroule en trois étapes :
 3. **Vérification des oublis** — les ouvrages détectés sont comparés à une
    check-list métier ; Claude renvoie les postes manquants ou à vérifier, avec
    une gravité.
+
+### Gestion documentaire (`src/documents.js`)
+
+Classe automatiquement les documents de l'entreprise — contrats, plans,
+avenants, photos, procès-verbaux, courriels, fiches techniques, rapports — à
+partir d'un fichier (image/PDF) ou d'un texte collé. Pour chaque document, il
+extrait le type, le titre, le projet, la date, les intervenants, un montant
+éventuel, des mots-clés, un résumé et les actions attendues. Il devient ensuite
+le **moteur de recherche** de l'entreprise : une requête en langage naturel
+classe les documents archivés par pertinence et propose une synthèse.
+
+> Le fonds documentaire est stocké **en mémoire** et réinitialisé au redémarrage
+> du serveur. Pour un usage réel, remplacez le tableau `documents` de
+> `server.js` par une base de données persistante.
+
+### Achats (`src/achats.js`)
+
+Compare les offres fournisseurs, prépare les bons de commande, suit les délais
+de livraison, compare les prix et suggère des économies. La comparaison chiffrée
+(totaux par fournisseur, meilleur prix par article, panier optimisé, économie
+potentielle) est **déterministe** ; Claude apporte le jugement : stratégie
+d'achat (fournisseur unique / panier optimisé / mixte), leviers d'économies,
+risques et conditions. Le bon de commande est ensuite assemblé de façon
+déterministe selon la stratégie retenue.
 
 ## Prérequis
 
@@ -46,19 +73,34 @@ PDF) et lancez l'estimation.
 ## Structure du projet
 
 ```
-server.js          Serveur Express + endpoint /api/estimation
-src/estimator.js   Appels au modèle Claude (analyse vision + contrôle des oublis)
-src/pricing.js     Bordereau de prix unitaires et calcul de l'estimation
-public/            Interface web (HTML/CSS/JS)
+server.js          Serveur Express + endpoints des trois agents
+src/estimator.js   Estimateur — analyse vision + contrôle des oublis (Claude)
+src/pricing.js     Estimateur — bordereau de prix unitaires et chiffrage
+src/documents.js   Gestion documentaire — classement + moteur de recherche
+src/achats.js      Achats — comparaison des offres et bon de commande
+public/            Interface web à onglets (HTML/CSS/JS)
 ```
+
+### Points d'entrée de l'API
+
+| Méthode & route                   | Agent               | Rôle                                        |
+| --------------------------------- | ------------------- | ------------------------------------------- |
+| `POST /api/estimation`            | Estimateur          | Analyse des plans + estimation + oublis     |
+| `POST /api/documents/classer`     | Gestion documentaire| Classe et archive un document               |
+| `GET  /api/documents`             | Gestion documentaire| Liste le fonds documentaire                 |
+| `POST /api/documents/rechercher`  | Gestion documentaire| Recherche en langage naturel                |
+| `DELETE /api/documents/:id`       | Gestion documentaire| Retire un document du fonds                 |
+| `POST /api/achats/analyser`       | Achats              | Comparatif, économies et bon de commande    |
 
 ## Configuration
 
-| Variable            | Rôle                                    | Défaut          |
-| ------------------- | --------------------------------------- | --------------- |
-| `ANTHROPIC_API_KEY` | Clé API Anthropic (requise)             | —               |
-| `ESTIMATEUR_MODEL`  | Modèle vision utilisé                   | `claude-opus-5` |
-| `PORT`              | Port du serveur                         | `3000`          |
+| Variable             | Rôle                                    | Défaut          |
+| -------------------- | --------------------------------------- | --------------- |
+| `ANTHROPIC_API_KEY`  | Clé API Anthropic (requise)             | —               |
+| `ESTIMATEUR_MODEL`   | Modèle de l'agent Estimateur (vision)   | `claude-opus-5` |
+| `GESTIONNAIRE_MODEL` | Modèle de l'agent Gestion documentaire  | `claude-opus-5` |
+| `ACHATS_MODEL`       | Modèle de l'agent Achats                | `claude-opus-5` |
+| `PORT`               | Port du serveur                         | `3000`          |
 
 ## Limites
 

@@ -3,93 +3,246 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Estimateur IA — Génie civil</title>
+    <title>Suite IA — Génie civil</title>
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
     <header class="entete">
       <div class="entete-contenu">
-        <h1>Estimateur IA <span>Génie civil</span></h1>
-        <p>
-          Analyse vos plans, prépare une première estimation et vérifie les
-          oublis.
-        </p>
+        <h1>Suite IA <span>Génie civil</span></h1>
+        <p>Vos agents IA au service du chantier : estimation, documentation, achats.</p>
       </div>
     </header>
 
+    <nav class="onglets" id="onglets">
+      <button class="onglet actif" data-cible="agent-estimateur">
+        Estimateur
+      </button>
+      <button class="onglet" data-cible="agent-documents">
+        Gestion documentaire
+      </button>
+      <button class="onglet" data-cible="agent-achats">Achats</button>
+    </nav>
+
     <main>
-      <section class="carte">
-        <h2>1. Téléverser les plans</h2>
-        <p class="aide">
-          Formats acceptés : PNG, JPEG, WEBP, PDF — jusqu'à 10 fichiers (25 Mo max
-          chacun).
-        </p>
-
-        <label class="zone-depot" id="zoneDepot">
-          <input type="file" id="champFichiers" accept="image/*,application/pdf" multiple hidden />
-          <span class="zone-depot-texte">
-            Glissez vos plans ici ou <strong>cliquez pour parcourir</strong>
-          </span>
-        </label>
-
-        <ul class="liste-fichiers" id="listeFichiers"></ul>
-
-        <button id="boutonAnalyser" class="bouton-principal" disabled>
-          Lancer l'estimation
-        </button>
-      </section>
-
-      <section class="carte" id="chargement" hidden>
-        <div class="loader"></div>
-        <p id="messageChargement">Analyse des plans en cours…</p>
-      </section>
-
-      <section class="carte erreur" id="carteErreur" hidden>
-        <h2>Erreur</h2>
-        <p id="messageErreur"></p>
-      </section>
-
-      <div id="resultats" hidden>
+      <!-- ============================ ESTIMATEUR ============================ -->
+      <div class="panneau actif" id="agent-estimateur">
         <section class="carte">
-          <h2>2. Projet analysé</h2>
-          <p id="descriptionProjet" class="description-projet"></p>
-          <p id="observations" class="observations"></p>
-        </section>
-
-        <section class="carte">
-          <h2>3. Première estimation</h2>
-          <div class="table-wrap">
-            <table id="tableauEstimation">
-              <thead>
-                <tr>
-                  <th>Poste</th>
-                  <th>Catégorie</th>
-                  <th class="num">Quantité</th>
-                  <th>Unité</th>
-                  <th class="num">P.U. (€)</th>
-                  <th class="num">Montant (€)</th>
-                </tr>
-              </thead>
-              <tbody></tbody>
-            </table>
-          </div>
-          <div class="recap" id="recap"></div>
-          <p class="avertissement">
-            Estimation indicative de première approche. Les prix unitaires du
-            bordereau doivent être ajustés au contexte réel du projet.
+          <h2>1. Téléverser les plans</h2>
+          <p class="aide">
+            Formats acceptés : PNG, JPEG, WEBP, PDF — jusqu'à 10 fichiers (25 Mo
+            max chacun).
           </p>
+
+          <label class="zone-depot" id="zoneDepot">
+            <input type="file" id="champFichiers" accept="image/*,application/pdf" multiple hidden />
+            <span class="zone-depot-texte">
+              Glissez vos plans ici ou <strong>cliquez pour parcourir</strong>
+            </span>
+          </label>
+
+          <ul class="liste-fichiers" id="listeFichiers"></ul>
+
+          <button id="boutonAnalyser" class="bouton-principal" disabled>
+            Lancer l'estimation
+          </button>
+        </section>
+
+        <section class="carte" id="chargement" hidden>
+          <div class="loader"></div>
+          <p id="messageChargement">Analyse des plans en cours…</p>
+        </section>
+
+        <section class="carte erreur" id="carteErreur" hidden>
+          <h2>Erreur</h2>
+          <p id="messageErreur"></p>
+        </section>
+
+        <div id="resultats" hidden>
+          <section class="carte">
+            <h2>2. Projet analysé</h2>
+            <p id="descriptionProjet" class="description-projet"></p>
+            <p id="observations" class="observations"></p>
+          </section>
+
+          <section class="carte">
+            <h2>3. Première estimation</h2>
+            <div class="table-wrap">
+              <table id="tableauEstimation">
+                <thead>
+                  <tr>
+                    <th>Poste</th>
+                    <th>Catégorie</th>
+                    <th class="num">Quantité</th>
+                    <th>Unité</th>
+                    <th class="num">P.U. (€)</th>
+                    <th class="num">Montant (€)</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+            <div class="recap" id="recap"></div>
+            <p class="avertissement">
+              Estimation indicative de première approche. Les prix unitaires du
+              bordereau doivent être ajustés au contexte réel du projet.
+            </p>
+          </section>
+
+          <section class="carte">
+            <h2>4. Vérification des oublis</h2>
+            <p id="syntheseControle" class="synthese-controle"></p>
+            <ul class="liste-oublis" id="listeOublis"></ul>
+          </section>
+        </div>
+      </div>
+
+      <!-- ======================= GESTION DOCUMENTAIRE ======================= -->
+      <div class="panneau" id="agent-documents">
+        <section class="carte">
+          <h2>Classer un document</h2>
+          <p class="aide">
+            L'agent identifie automatiquement le type (contrat, plan, avenant,
+            photo, procès-verbal, courriel, fiche technique, rapport), le projet,
+            les intervenants et les mots-clés.
+          </p>
+
+          <label class="zone-depot" id="zoneDepotDoc">
+            <input type="file" id="champFichiersDoc" accept="image/*,application/pdf" multiple hidden />
+            <span class="zone-depot-texte">
+              Glissez un document ici ou <strong>cliquez pour parcourir</strong>
+            </span>
+          </label>
+          <ul class="liste-fichiers" id="listeFichiersDoc"></ul>
+
+          <label class="champ-libelle" for="texteDoc">
+            …ou collez un texte (courriel, procès-verbal, note) :
+          </label>
+          <textarea
+            id="texteDoc"
+            class="zone-texte"
+            rows="4"
+            placeholder="Collez ici le contenu d'un courriel, d'un compte rendu…"
+          ></textarea>
+
+          <button id="boutonClasser" class="bouton-principal">
+            Classer et archiver
+          </button>
+          <div class="loader-inline" id="chargementDoc" hidden>
+            <div class="loader petit"></div>
+            <span>Classement en cours…</span>
+          </div>
+          <p class="erreur-inline" id="erreurDoc" hidden></p>
         </section>
 
         <section class="carte">
-          <h2>4. Vérification des oublis</h2>
-          <p id="syntheseControle" class="synthese-controle"></p>
-          <ul class="liste-oublis" id="listeOublis"></ul>
+          <h2>Moteur de recherche</h2>
+          <p class="aide">
+            Interrogez le fonds documentaire en langage naturel : « avenants du
+            chantier A15 », « procès-verbaux de réception 2025 », « fiches
+            techniques béton »…
+          </p>
+          <div class="barre-recherche">
+            <input
+              type="text"
+              id="champRecherche"
+              class="champ-recherche"
+              placeholder="Rechercher dans les documents archivés…"
+            />
+            <button id="boutonRechercher" class="bouton-principal compact">
+              Rechercher
+            </button>
+          </div>
+          <div class="loader-inline" id="chargementRecherche" hidden>
+            <div class="loader petit"></div>
+            <span>Recherche en cours…</span>
+          </div>
+          <p id="syntheseRecherche" class="synthese-controle" hidden></p>
+          <ul class="liste-resultats" id="listeResultats"></ul>
         </section>
+
+        <section class="carte">
+          <div class="entete-section">
+            <h2>Fonds documentaire (<span id="compteurDocs">0</span>)</h2>
+          </div>
+          <ul class="liste-documents" id="listeDocuments">
+            <li class="vide">Aucun document archivé pour le moment.</li>
+          </ul>
+        </section>
+      </div>
+
+      <!-- ============================== ACHATS ============================== -->
+      <div class="panneau" id="agent-achats">
+        <section class="carte">
+          <h2>Comparer des offres fournisseurs</h2>
+          <p class="aide">
+            Décrivez le besoin, saisissez les offres reçues : l'agent compare les
+            prix et délais, recommande une stratégie, chiffre les économies et
+            prépare le bon de commande.
+          </p>
+
+          <label class="champ-libelle" for="besoinAchat">Besoin</label>
+          <input
+            type="text"
+            id="besoinAchat"
+            class="champ-recherche"
+            placeholder="Ex. : fourniture ciment + aciers pour fondations chantier A15"
+          />
+
+          <div id="listeOffres" class="liste-offres"></div>
+
+          <button id="boutonAjouterFournisseur" class="bouton-secondaire" type="button">
+            + Ajouter un fournisseur
+          </button>
+
+          <button id="boutonAnalyserAchat" class="bouton-principal">
+            Comparer et recommander
+          </button>
+          <div class="loader-inline" id="chargementAchat" hidden>
+            <div class="loader petit"></div>
+            <span>Analyse des offres en cours…</span>
+          </div>
+          <p class="erreur-inline" id="erreurAchat" hidden></p>
+        </section>
+
+        <div id="resultatsAchat" hidden>
+          <section class="carte">
+            <h2>Comparatif des fournisseurs</h2>
+            <div class="table-wrap">
+              <table id="tableauComparatif">
+                <thead>
+                  <tr>
+                    <th>Fournisseur</th>
+                    <th class="num">Articles</th>
+                    <th class="num">Délai max</th>
+                    <th class="num">Total (€)</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
+            </div>
+            <div class="recap" id="recapAchat"></div>
+          </section>
+
+          <section class="carte">
+            <h2>Recommandation</h2>
+            <p id="recommandationAchat" class="synthese-controle"></p>
+            <h3 class="sous-titre">Leviers d'économies</h3>
+            <ul class="liste-economies" id="listeEconomies"></ul>
+            <h3 class="sous-titre">Points de vigilance</h3>
+            <ul class="liste-risques" id="listeRisques"></ul>
+          </section>
+
+          <section class="carte">
+            <h2>Bon de commande</h2>
+            <div class="bon-commande" id="bonCommande"></div>
+          </section>
+        </div>
       </div>
     </main>
 
     <footer>
-      <p>Estimateur IA — outil d'aide au chiffrage. Ne remplace pas un métré détaillé.</p>
+      <p>Suite IA génie civil — outils d'aide à la décision. Ne remplacent pas le jugement d'un professionnel.</p>
     </footer>
 
     <script src="app.js"></script>
