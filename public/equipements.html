@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Gestion des équipements — Génie civil</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="entete">
+      <div class="entete-contenu">
+        <p class="fil-ariane"><a href="index.html">← Estimateur IA</a></p>
+        <h1>Gestion des équipements <span>Agent 9</span></h1>
+        <p>
+          Suivi du parc matériel — entretiens, inspections, garanties, coûts et
+          consommation de carburant.
+        </p>
+      </div>
+    </header>
+
+    <main>
+      <!-- Synthèse du parc -->
+      <section class="carte">
+        <h2>Synthèse du parc</h2>
+        <div class="kpis" id="kpis"></div>
+      </section>
+
+      <!-- Plan de maintenance IA -->
+      <section class="carte">
+        <div class="carte-entete">
+          <h2>Plan de maintenance (agent IA)</h2>
+          <button id="boutonPlan" class="bouton-principal compact">
+            Générer le plan
+          </button>
+        </div>
+        <p class="aide">
+          L'agent analyse les échéances et coûts du parc et propose un plan
+          d'action priorisé.
+        </p>
+        <div id="chargementPlan" class="chargement-inline" hidden>
+          <div class="loader petit"></div>
+          <span>Analyse du parc en cours…</span>
+        </div>
+        <div class="carte erreur interne" id="erreurPlan" hidden>
+          <p id="messageErreurPlan"></p>
+        </div>
+        <div id="resultatPlan" hidden>
+          <p id="synthesePlan" class="synthese-controle"></p>
+          <ul class="liste-oublis" id="listeActions"></ul>
+          <div id="blocRecommandations" hidden>
+            <h3>Recommandations transversales</h3>
+            <ul class="liste-reco" id="listeReco"></ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Parc d'équipements -->
+      <section class="carte">
+        <div class="carte-entete">
+          <h2>Parc d'équipements</h2>
+          <button id="boutonNouveau" class="bouton-secondaire">
+            + Ajouter un équipement
+          </button>
+        </div>
+        <p class="aide">
+          Les échéances dépassées ou urgentes sont mises en évidence. Ajoutez des
+          opérations (entretien, plein, réparation…) pour actualiser les indicateurs.
+        </p>
+        <div id="chargementParc" class="chargement-inline">
+          <div class="loader petit"></div>
+          <span>Chargement du parc…</span>
+        </div>
+        <div class="grille-equipements" id="grilleEquipements"></div>
+      </section>
+    </main>
+
+    <footer>
+      <p>
+        Estimateur IA — Agent gestion des équipements. Indicateurs de première
+        approche, à valider par le responsable matériel.
+      </p>
+    </footer>
+
+    <!-- Modale : ajout d'équipement -->
+    <div class="modale" id="modaleEquipement" hidden>
+      <div class="modale-contenu">
+        <div class="modale-entete">
+          <h2>Ajouter un équipement</h2>
+          <button class="fermer" id="fermerEquipement" aria-label="Fermer">×</button>
+        </div>
+        <form id="formEquipement" class="form-grille">
+          <label>Type
+            <select name="type" id="champType" required></select>
+          </label>
+          <label>Nom / désignation
+            <input name="nom" type="text" placeholder="Camion benne 01" required />
+          </label>
+          <label>Marque
+            <input name="marque" type="text" placeholder="Volvo" />
+          </label>
+          <label>Modèle
+            <input name="modele" type="text" placeholder="FMX 8x4" />
+          </label>
+          <label>Immatriculation
+            <input name="immatriculation" type="text" placeholder="AB-123-CD" />
+          </label>
+          <label>Année
+            <input name="annee" type="number" min="1980" max="2100" placeholder="2020" />
+          </label>
+          <label>Valeur d'achat (€)
+            <input name="valeurAchat" type="number" min="0" step="any" />
+          </label>
+          <label>Compteur actuel (<span class="unite-compteur">km/h</span>)
+            <input name="compteurActuel" type="number" min="0" step="any" />
+          </label>
+          <label>Compteur dernier entretien
+            <input name="compteurDernierEntretien" type="number" min="0" step="any" />
+          </label>
+          <label>Intervalle entretien (compteur)
+            <input name="intervalleEntretien" type="number" min="0" step="any" placeholder="15000" />
+          </label>
+          <label>Intervalle entretien (mois)
+            <input name="intervalleEntretienMois" type="number" min="0" step="1" placeholder="12" />
+          </label>
+          <label>Dernier entretien
+            <input name="dateDernierEntretien" type="date" />
+          </label>
+          <label>Intervalle inspection (mois)
+            <input name="intervalleInspectionMois" type="number" min="0" step="1" value="12" />
+          </label>
+          <label>Dernière inspection
+            <input name="dateDerniereInspection" type="date" />
+          </label>
+          <label>Fin de garantie
+            <input name="dateFinGarantie" type="date" />
+          </label>
+          <label>Consommation de référence
+            <input name="consommationReference" type="number" min="0" step="any" placeholder="L/100km ou L/h" />
+          </label>
+          <label class="pleine-largeur">Notes
+            <textarea name="notes" rows="2"></textarea>
+          </label>
+          <div class="form-actions pleine-largeur">
+            <button type="button" class="bouton-secondaire" id="annulerEquipement">Annuler</button>
+            <button type="submit" class="bouton-principal compact">Enregistrer</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Modale : ajout d'opération -->
+    <div class="modale" id="modaleOperation" hidden>
+      <div class="modale-contenu">
+        <div class="modale-entete">
+          <h2>Ajouter une opération</h2>
+          <button class="fermer" id="fermerOperation" aria-label="Fermer">×</button>
+        </div>
+        <p class="aide" id="operationCible"></p>
+        <form id="formOperation" class="form-grille">
+          <input type="hidden" name="equipementId" />
+          <label>Catégorie
+            <select name="categorie" id="champCategorie" required></select>
+          </label>
+          <label>Date
+            <input name="date" type="date" required />
+          </label>
+          <label>Montant (€)
+            <input name="montant" type="number" min="0" step="any" value="0" />
+          </label>
+          <label id="champLitresWrap" hidden>Litres (carburant)
+            <input name="litres" type="number" min="0" step="any" />
+          </label>
+          <label>Relevé compteur
+            <input name="compteur" type="number" min="0" step="any" />
+          </label>
+          <label class="pleine-largeur">Description
+            <input name="description" type="text" />
+          </label>
+          <div class="form-actions pleine-largeur">
+            <button type="button" class="bouton-secondaire" id="annulerOperation">Annuler</button>
+            <button type="submit" class="bouton-principal compact">Enregistrer</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <script src="equipements-app.js"></script>
+  </body>
+</html>
